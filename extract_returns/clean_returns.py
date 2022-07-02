@@ -23,8 +23,6 @@ for line in open(returns_file):
     # remove opening and closing quotes
     value = value.strip('"')
 
-    print(value[-3:-1])
-
     # write key_name and value to new file
     with open(clean_returns_file, "a") as f:
         f.write(key_name + "=" + value + "\n")
