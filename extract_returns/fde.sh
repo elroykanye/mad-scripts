@@ -89,6 +89,8 @@ for file in $FOLDER/*; do
   fi
 done
 
+python3 clean_returns.py $RESULT_FILE
+
 
 
 
