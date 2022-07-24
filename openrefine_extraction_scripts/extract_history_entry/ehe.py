@@ -6,10 +6,9 @@ java_file = sys.argv[2]
 out_file_name = sys.argv[3].replace(".sh", "")
 
 output_file_create = open(out_file_name, 'a')
-output_file_brief = open("brief_" + out_file_name, 'a')
 
 
-def process_operation_desc_brief(lines, brief) -> any:
+def process_history_entry(lines, brief) -> any:
     if len(lines) == 0:
         print("SITUATION EMPTY")
         return
@@ -20,7 +19,11 @@ def process_operation_desc_brief(lines, brief) -> any:
         desc = desc[:-1]
     if desc[-1] == ";":
         desc = desc[:-1]
-    print(desc)
+    desc_parts = desc.split(",")
+    if len(desc_parts) < 3:
+        return
+    print(desc_parts)
+    desc = desc_parts[2]
     result = key_name + "=" + desc.strip() + "\n"
     if brief:
         output_file_brief.write(result)
@@ -28,33 +31,7 @@ def process_operation_desc_brief(lines, brief) -> any:
         output_file_create.write(result)
 
 
-def parse_brief_desc():
-    with open(java_file) as f:
-        java_filename = java_file.split('/')[-1]
-        print(java_filename)
-        woi = False
-        d_woi = False
-        step: int = -1
-        lines = []
-        for line in f:
-            if step == 0 and woi:
-                lines.append(line.strip())
-            if "getBriefDescription(Project project)" in line:
-                woi = True
-                if "{" in line:
-                    step = step + 1
-                continue
-            if "{" in line and woi:
-                step = step + 1
-            if "}" in line and woi:
-                step = step - 1
-                if step == -1:
-                    woi = False
-        process_operation_desc_brief(lines, True)
-        print("\n")
-
-
-def parse_create_desc():
+def parse_history_entry():
     with open(java_file) as f:
         java_filename = java_file.split('/')[-1]
         print(java_filename)
@@ -62,7 +39,7 @@ def parse_create_desc():
         returning = False
         lines = []
         for line in f:
-            if "createDescription" in line:
+            if "HistoryEntry createHistoryEntry" in line:
                 in_method = True
                 continue
             if ("return" in line or returning) and in_method:
@@ -73,14 +50,10 @@ def parse_create_desc():
                 else:
                     returning = True
 
-
-
-        process_operation_desc_brief(lines, False)
+        process_history_entry(lines, False)
         print("\n")
 
 
-parse_brief_desc()
-parse_create_desc()
+parse_history_entry()
 
 output_file_create.close()
-output_file_brief.close()

@@ -23,7 +23,7 @@ function eval_error_extract() {
       echo "File not found: $FILE"
       exit 1
   else
-  	python3 eod.py $KEY_NAME $FILE $RESULT_FILE
+  	python3 ehe.py $KEY_NAME $FILE $RESULT_FILE
   fi
 }
 
