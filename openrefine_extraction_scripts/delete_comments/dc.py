@@ -10,7 +10,7 @@ remove_cases = {
 base_folder = sys.argv[1]
 remove_case = sys.argv[2]
 
-def remove_comments(filename):
+def remove_comments(filename, sw_excludes, follow_lines):
     print("Removing comments from " + filename)
     try:
         with open(filename, 'r') as fr:
@@ -18,12 +18,18 @@ def remove_comments(filename):
             lines = fr.readlines()
             # delete commented lines
             with open(filename, 'w') as fw:
+                flag = False
                 for line in lines:
                     # check if line starts with '// return new EvalError'
-                    if line.strip().startswith('// return new EvalError') or line.strip().startswith('//return new EvalError'):
+                    # if line.strip().startswith('// return new EvalError') or line.strip().startswith('//return new EvalError'):
+                    if line.strip().startswith(tuple(sw_excludes)):
                         print("DELETED: " + line)
+                        flag = True
+                    elif flag and follow_lines and line.strip().startswith("//"):
+                        print("DELETED FOLLOING: " + line)
                     else:
                         fw.write(line)
+                        flag = False
     except IOError:
         print('File not found')
         sys.exit(1)
