@@ -42,4 +42,7 @@ if base_folder.endswith('/') or base_folder.endswith('\\'):
     for root, dirs, files in os.walk(base_folder):
         for file in files:
             if file.endswith('.java'):
-                remove_comments(os.path.join(root, file))
+                if remove_case in remove_cases.keys():
+                    remove_comments(os.path.join(root, file), remove_cases[remove_case][1:], remove_cases[remove_case][0])
+                else:
+                    print("remove_case not recognised")
