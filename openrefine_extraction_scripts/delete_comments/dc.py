@@ -2,8 +2,13 @@ import sys
 import os
 
 # deleting lines which were commented out during the extraction process
+remove_cases = {
+    "eval_error": [False, '// return new EvalError', '//return new EvalError'],
+    "op_desc": [True, '// return'],
+}
 
 base_folder = sys.argv[1]
+remove_case = sys.argv[2]
 
 def remove_comments(filename):
     print("Removing comments from " + filename)
